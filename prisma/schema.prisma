@@ -40,14 +40,14 @@ model Admin {
   username       String   @unique
   passwordHash   String
   createdAt      DateTime @default(now())
-  sessions       AdminSession[]
+  sessions       AdminSession[] @relation("AdminSessions")
 }
 
 model AdminSession {
   id        String   @id @default(cuid())
   token     String   @unique
   adminId   String
-  admin     Admin    @relation(fields: [adminId], references: [id], onDelete: Cascade)
+  admin     Admin    @relation("AdminSessions", fields: [adminId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())
   expiresAt DateTime
 }
