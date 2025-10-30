@@ -35,11 +35,11 @@ const config: Config = {
           "50%": { transform: "translate3d(0, 8px, 0) scale(1.02)" }
         },
         flicker: {
-          "0%, 100%": { opacity: 0.95 },
-          "40%": { opacity: 0.6 },
-          "50%": { opacity: 0.9 },
-          "60%": { opacity: 0.55 },
-          "70%": { opacity: 0.92 }
+          "0%, 100%": { opacity: "0.95" },
+          "40%": { opacity: "0.6" },
+          "50%": { opacity: "0.9" },
+          "60%": { opacity: "0.55" },
+          "70%": { opacity: "0.92" }
         }
       }
     }
