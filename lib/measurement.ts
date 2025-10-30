@@ -1,5 +1,3 @@
-import crypto from "node:crypto";
-
 export const LENGTH_COMMENTS: Record<string, string> = {
   "1-5": "来自另一个量子维度的微型奇迹，谨慎使用显微镜。",
   "6-10": "看起来像是星舰工程师正在施工，成果正在缓慢浮现。",
@@ -31,5 +29,13 @@ export function createLengthComment(value: number): string {
 }
 
 export function randomLength(): number {
-  return crypto.randomInt(1, 26);
+  const cryptoApi = typeof globalThis !== "undefined" ? globalThis.crypto : undefined;
+
+  if (cryptoApi && typeof cryptoApi.getRandomValues === "function") {
+    const buffer = new Uint32Array(1);
+    cryptoApi.getRandomValues(buffer);
+    return (buffer[0] % 25) + 1;
+  }
+
+  return Math.floor(Math.random() * 25) + 1;
 }

@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import { requireAdmin } from "@/lib/adminGuard";
 
@@ -11,7 +12,7 @@ export async function GET(request: Request) {
   const where = search
     ? {
         OR: [
-          { name: { contains: search, mode: "insensitive" } },
+          { name: { contains: search, mode: Prisma.QueryMode.insensitive } },
           { normalizedName: { contains: search.toLowerCase() } }
         ]
       }
