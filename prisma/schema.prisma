@@ -1,0 +1,52 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Measurement {
+  id              String   @id @default(cuid())
+  name            String
+  normalizedName  String   @unique
+  value           Int
+  listed          Boolean  @default(false)
+  listedAt        DateTime?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model EasterEgg {
+  id                 String   @id @default(cuid())
+  trigger            String
+  normalizedTrigger  String   @unique
+  value              Int
+  note               String?
+  createdAt          DateTime @default(now())
+}
+
+model BannedName {
+  id                String   @id @default(cuid())
+  value             String
+  normalizedValue   String   @unique
+  reason            String?
+  createdAt         DateTime @default(now())
+}
+
+model Admin {
+  id             String   @id @default(cuid())
+  username       String   @unique
+  passwordHash   String
+  createdAt      DateTime @default(now())
+}
+
+model AdminSession {
+  id        String   @id @default(cuid())
+  token     String   @unique
+  adminId   String
+  admin     Admin    @relation(fields: [adminId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  expiresAt DateTime
+}
