@@ -16,9 +16,18 @@ export default function AdminPage() {
   const [newEggName, setNewEggName] = useState('')
   const [newEggLength, setNewEggLength] = useState('')
   const [newEggMessage, setNewEggMessage] = useState('')
+  const [passwordError, setPasswordError] = useState('')
   const router = useRouter()
 
-  const ADMIN_PASSWORD = 'admin123' // In production, use environment variable
+  // 获取管理员密码（从环境变量或开发默认值）
+  const getAdminPassword = () => {
+    // 在实际项目中，应该通过API或配置服务获取，而不是客户端
+    // 这里只是演示，生产环境中应该在服务器端验证
+    if (typeof window !== 'undefined') {
+      return process.env.NEXT_PUBLIC_ADMIN_PASSWORD || 'admin123'
+    }
+    return process.env.ADMIN_PASSWORD || 'admin123'
+  }
 
   useEffect(() => {
     // Check if user has accepted agreement
@@ -30,11 +39,16 @@ export default function AdminPage() {
   }, [router])
 
   const handleLogin = () => {
-    if (password === ADMIN_PASSWORD) {
+    const adminPassword = getAdminPassword()
+    
+    if (password === adminPassword) {
       setIsAuthenticated(true)
+      setPasswordError('')
       loadData()
     } else {
-      alert('密码错误')
+      setPasswordError('密码错误，请重新输入')
+      // 清除密码字段
+      setPassword('')
     }
   }
 
@@ -229,16 +243,27 @@ export default function AdminPage() {
             <input
               type="password"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={(e) => {
+                setPassword(e.target.value)
+                setPasswordError('') // 清除错误信息
+              }}
               placeholder="管理员密码"
               className="cyber-input w-full px-4 py-3 rounded-lg"
               onKeyPress={(e) => e.key === 'Enter' && handleLogin()}
             />
+            {passwordError && (
+              <div className="text-red-400 text-sm bg-red-900/20 border border-red-500/30 rounded px-3 py-2">
+                ⚠️ {passwordError}
+              </div>
+            )}
+            <div className="text-xs text-gray-500 text-center">
+              ⚠️ 生产环境中请设置 ADMIN_PASSWORD 环境变量
+            </div>
             <button
               onClick={handleLogin}
               className="cyber-button w-full py-3 text-white font-bold rounded-lg"
             >
-              登录
+              🔐 登录
             </button>
           </div>
         </div>
